@@ -325,6 +325,7 @@ int rproc_elf_load_rsc_table(struct rproc *rproc, const struct firmware *fw)
 		rproc->table_ptr = NULL;
 		rproc->cached_table = NULL;
 		rproc->table_sz = 0;
+		dev_warn(dev, "resource table missing\n");
 		return 0;
 	}
 
