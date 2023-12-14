@@ -580,6 +580,13 @@
 	status = "reserved";
 };
 
+&{/reserved-memory} {
+	framebuffer: framebuffer@ff700000 {
+		reg = <0x00 0xff700000 0x00 0x008ca000>;
+		no-map;
+	};
+};
+
 &sdhci1 {
 	/* SD Card */
 	vmmc-supply = <&vdd_mmc1>;
