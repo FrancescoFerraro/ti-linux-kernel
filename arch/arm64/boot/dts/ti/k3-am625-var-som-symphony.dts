@@ -56,28 +56,6 @@
 		clock-frequency = <12000000>;
 	};
 
-	connector {
-		compatible = "gpio-usb-b-connector","usb-c-connector";
-		pinctrl-names = "default";
-		pinctrl-0 = <&extcon_pins_default>;
-		label = "USB-C";
-		id-gpios = <&main_gpio1 12 GPIO_ACTIVE_HIGH>;
-		status = "okay";
-
-		ports {
-			#address-cells = <1>;
-			#size-cells = <0>;
-
-			port@1 {
-				reg = <1>;
-
-				usb_con_hs: endpoint {
-					remote-endpoint = <&typec_hs>;
-				};
-			};
-		};
-	};
-
 	display {
 		compatible = "sgd,gktw70sdae4se";
 		backlight = <&backlight>;
@@ -626,8 +604,8 @@
 	usb-role-switch;
 	status="okay";
 
-	port@1 {
-		reg = <1>;
+	port@0 {
+		reg = <0>;
 
 		typec_hs: endpoint {
 			remote-endpoint = <&usb_con_hs>;
@@ -645,6 +623,32 @@
 &usbss0 {
 	status = "okay";
 	ti,vbus-divider;
+
+	connector {
+		compatible = "gpio-usb-b-connector","usb-c-connector";
+		pinctrl-names = "default";
+		pinctrl-0 = <&extcon_pins_default>;
+		label = "USB-C";
+		id-gpios = <&main_gpio1 12 GPIO_ACTIVE_HIGH>;
+		status = "okay";
+
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+
+				usb_con_hs: endpoint {
+					remote-endpoint = <&typec_hs>;
+				};
+			};
+		};
+	};
+};
+
+&usbss1 {
+	status = "okay";
 };
 
 &wkup_i2c0 {
