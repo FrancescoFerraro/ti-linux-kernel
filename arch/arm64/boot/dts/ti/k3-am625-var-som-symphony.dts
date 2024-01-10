@@ -186,6 +186,10 @@
 	};
 };
 
+&dphy0 {
+	status = "okay";
+};
+
 &dss {
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_oldi0_pins_default>;
@@ -580,6 +584,10 @@
 	ti,driver-strength-ohm = <50>;
 	disable-wp;
 	status="okay";
+};
+
+&ti_csi2rx0 {
+	status = "okay";
 };
 
 #define K3_TS_OFFSET(pa, val)	(0x4+(pa)*4) (0x10000 | val)
