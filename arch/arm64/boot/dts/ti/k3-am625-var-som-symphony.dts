@@ -630,7 +630,6 @@
 
 &usbss0 {
 	status = "okay";
-	ti,vbus-divider;
 
 	connector {
 		compatible = "gpio-usb-b-connector","usb-c-connector";

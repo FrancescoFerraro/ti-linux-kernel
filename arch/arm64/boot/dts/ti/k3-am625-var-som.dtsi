@@ -460,7 +460,15 @@
 	bus-width = <4>;
 	disable-wp;
 	ti,driver-strength-ohm = <50>;
-	status="okay";
+	status = "okay";
 	ti,fails-without-test-cd;
 	non-removable;
+};
+
+&usbss0 {
+	ti,vbus-divider;
+};
+
+&usbss1 {
+	ti,vbus-divider;
 };
