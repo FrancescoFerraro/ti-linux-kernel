@@ -148,9 +148,9 @@
 };
 
 &cpsw3g {
+	status = "okay";
 	pinctrl-names = "default";
-	pinctrl-0 = <&main_mdio1_pins_default
-		     &main_rgmii1_pins_default
+	pinctrl-0 = <&main_rgmii1_pins_default
 		     &main_rgmii2_pins_default>;
 
 	cpts@3d000 {
@@ -161,6 +161,8 @@
 
 &cpsw3g_mdio {
 	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&main_mdio1_pins_default>;
 	cpsw3g_phy1: ethernet-phy@5 {
 		reg = <5>;
 		compatible = "ethernet-phy-id0283.bc30";
@@ -173,6 +175,7 @@
 &cpsw_port2 {
 	phy-mode = "rgmii";
 	phy-handle = <&cpsw3g_phy1>;
+	status = "okay";
 };
 
 &csi0_port0 {
