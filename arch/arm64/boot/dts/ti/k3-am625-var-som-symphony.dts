@@ -500,6 +500,7 @@
 };
 
 &main_spi2 {
+	status = "okay";
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_spi2_pins_default>;
 	ti,pindir-d0-out-d1-in = <1>;
