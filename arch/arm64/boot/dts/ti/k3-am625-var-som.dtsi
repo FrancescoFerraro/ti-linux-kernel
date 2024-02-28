@@ -170,12 +170,6 @@
 			sound-dai = <&mcasp1>;
 		};
 	};
-
-	wm8904_mclk: clk-0 {
-		#clock-cells = <0>;
-		compatible = "fixed-clock";
-		clock-frequency = <100000000>;
-	};
 };
 
 &cpsw3g {
@@ -212,7 +206,7 @@
 		#sound-dai-cells = <0>;
 		compatible = "wlf,wm8904";
 		reg = <0x1a>;
-		clocks = <&wm8904_mclk>;
+		clocks = <&audio_refclk1>;
 		clock-names = "mclk";
 		DBVDD-supply = <&vcc_3v3>;
 		DCVDD-supply = <&vcc_1v8>;
