@@ -332,8 +332,9 @@
 		reg = <0x38>;
 		pinctrl-names = "default";
 		pinctrl-0 = <&captouch_pins_default>;
-		interrupt-parent = <&main_gpio1>;
-		interrupts = <16 IRQ_TYPE_EDGE_FALLING>;
+		interrupts-extended = <&main_gpio1 16 IRQ_TYPE_EDGE_FALLING>,
+							  <&main_pmx0 0x1B8>;
+		interrupt-names = "irq", "wakeup";
 		touchscreen-size-x = <800>;
 		touchscreen-size-y = <480>;
 		touchscreen-inverted-x;
