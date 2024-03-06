@@ -293,12 +293,8 @@
 		clocks = <&clk_ov5640_fixed>;
 		clock-names = "xclk";
 
-		csi_id = <0>;
 		powerdown-gpios = <&main_gpio0 10 GPIO_ACTIVE_HIGH>;
 		reset-gpios = <&main_gpio0 22 GPIO_ACTIVE_LOW>;
-		mclk = <24000000>;
-		mclk_source = <0>;
-		mipi_csi;
 
 		pinctrl-names = "default";
 		pinctrl-0 = <&ov5640_pins_default>;
