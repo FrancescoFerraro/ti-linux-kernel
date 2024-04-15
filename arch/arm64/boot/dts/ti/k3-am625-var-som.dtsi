@@ -104,14 +104,32 @@
 		reset-gpios = <&main_gpio0 49 GPIO_ACTIVE_LOW>;
 	};
 
-	vcc_1v8: vcc-1v8 {
+	osc_32k: clock-osc-32k {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clock-frequency = <32768>;
+		clock-output-names = "osc_32k";
+	};
+
+	reg_bt_buf: reg-bt-buf {
 		compatible = "regulator-fixed";
-		regulator-name = "vcc_1v8";
-		regulator-min-microvolt = <1800000>;
-		regulator-max-microvolt = <1800000>;
-		vin-supply = <&vcc_3v3>;
-		regulator-always-on;
-		regulator-boot-on;
+		pinctrl-names = "default";
+		pinctrl-0 = <&bt_buf_default>;
+		regulator-name = "BT_BUF";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&main_gpio0 53 GPIO_ACTIVE_LOW>;
+	};
+
+	reg_wifi_vmmc: reg-wifi-mmc {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&wifi_pwr_default>;
+		regulator-name = "WIFI_PWR";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&main_gpio0 54 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
 	};
 
 	vcc_3v3: vcc-3v3 {
@@ -123,15 +141,14 @@
 		regulator-boot-on;
 	};
 
-	vdd_mmc2: vdd-wifi {
-		pinctrl-names = "default";
-		pinctrl-0 = <&vdd_mmc2_pins_default>;
+	vcc_1v8: vcc-1v8 {
 		compatible = "regulator-fixed";
-		regulator-name = "wifi_power";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
+		regulator-name = "vcc_1v8";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		vin-supply = <&vcc_3v3>;
 		regulator-always-on;
-		status="okay";
+		regulator-boot-on;
 	};
 
 	vdd_phy_3v3: regulator-8 {
@@ -169,6 +186,13 @@
 		simple-audio-card,cpu {
 			sound-dai = <&mcasp1>;
 		};
+	};
+
+	wifi_pwrseq: wifi-pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		pinctrl-names = "default";
+		pinctrl-0 = <&wifi_en_default>;
+		reset-gpios = <&main_gpio0 59 GPIO_ACTIVE_LOW>;
 	};
 };
 
@@ -244,6 +268,18 @@
 };
 
 &main_pmx0 {
+	bt_buf_default: bt-buf-default {
+		pinctrl-single,pins = <
+			AM62X_IOPAD(0x00d8, PIN_OUTPUT, 7) /* (V21) VOUT0_DATA8.GPIO0_53 */
+		>;
+	};
+
+	bt_en_default: bt-en-default {
+		pinctrl-single,pins = <
+			AM62X_IOPAD(0x00f4, PIN_OUTPUT, 7) /* (AA21) VOUT0_DATA15.GPIO0_60 */
+		>;
+	};
+
 	emmc_pwrseq_pins: pinmux_emmc_pwrseq_pins {
 		pinctrl-single,pins = <
 			AM62X_IOPAD(0x00c8, PIN_OUTPUT, 7) /* (Y25) VOUT0_DATA4.GPIO0_49 */
@@ -351,12 +387,15 @@
 		>;
 	};
 
-	vdd_mmc2_pins_default: vdd-mmc2-pins-default {
+	wifi_en_default: wifi-en-default {
 		pinctrl-single,pins = <
-			AM62X_IOPAD(0x00d8, PIN_OUTPUT, 7) /* (V21) VOUT0_DATA8.GPIO0_53 */
-			AM62X_IOPAD(0x00dc, PIN_OUTPUT, 7) /* (W21) VOUT0_DATA9.GPIO0_54 */
 			AM62X_IOPAD(0x00f0, PIN_OUTPUT, 7) /* (Y22) VOUT0_DATA14.GPIO0_59 */
-			AM62X_IOPAD(0x00f4, PIN_OUTPUT, 7) /* (AA21) VOUT0_DATA15.GPIO0_60 */
+		>;
+	};
+
+	wifi_pwr_default: wifi-pwr-default {
+		pinctrl-single,pins = <
+			AM62X_IOPAD(0x00dc, PIN_OUTPUT, 7) /* (W21) VOUT0_DATA9.GPIO0_54 */
 		>;
 	};
 };
@@ -398,6 +437,19 @@
 	pinctrl-0 = <&main_uart5_pins_default>;
 	uart-has-rtscts;
 	status = "okay";
+
+	bluetooth {
+		compatible = "brcm,bcm4329-bt";
+		pinctrl-names = "default";
+		pinctrl-0 = <&bt_en_default>;
+		clocks = <&osc_32k>;
+		clock-names = "txco";
+		max-speed = <3000000>;
+		vbat-supply = <&reg_bt_buf>;
+		vddio-supply = <&reg_wifi_vmmc>;
+		shutdown-gpios = <&main_gpio0 60 GPIO_ACTIVE_HIGH>;
+		brcm,bt-pcm-int-params = [01 00 00 00 00];
+	};
 };
 
 &mcasp1 {
@@ -441,17 +493,26 @@
 
 /* Wi-Fi */
 &sdhci2 {
+	#address-cells = <1>;
+	#size-cells = <0>;
 	assigned-clocks = <&k3_clks 157 158>; /* wkup_clkout_sel_out0 */
 	assigned-clock-parents = <&k3_clks 157 164>; /* clk_32k_rc_sel_out0 */
-	vmmc-supply = <&vdd_mmc2>;
+	vmmc-supply = <&reg_wifi_vmmc>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_mmc2_pins_default>, <&wkup_clkout0_pins_default>;
+	mmc-pwrseq = <&wifi_pwrseq>;
 	bus-width = <4>;
 	disable-wp;
 	ti,driver-strength-ohm = <50>;
 	status = "okay";
 	ti,fails-without-test-cd;
 	non-removable;
+
+	brcmf: bcrmf@1 {
+		reg = <1>;
+		compatible = "brcm,bcm4329-fmac";
+		laird,regdomain = "US";
+	};
 };
 
 &usbss0 {
