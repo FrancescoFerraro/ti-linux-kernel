@@ -114,6 +114,12 @@
 		status="okay";
 	};
 
+	transceiver1: can-phy0 {
+		compatible = "ti,tcan1042";
+		#phy-cells = <0>;
+		max-bitrate = <5000000>;
+	};
+
 	vdd_mmc1: regulator-3 {
 		compatible = "regulator-fixed";
 		regulator-name = "SD_power_en";
@@ -139,12 +145,6 @@
 		states = <1800000 0x0>,
 				 <3300000 0x1>;
 		status="okay";
-	};
-
-	transceiver1: can-phy0 {
-		compatible = "ti,tcan1042";
-		#phy-cells = <0>;
-		max-bitrate = <5000000>;
 	};
 };
 
