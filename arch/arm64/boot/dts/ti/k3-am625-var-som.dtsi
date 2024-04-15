@@ -104,21 +104,21 @@
 		reset-gpios = <&main_gpio0 49 GPIO_ACTIVE_LOW>;
 	};
 
-	vcc_3v3: vcc-3v3 {
-		compatible = "regulator-fixed";
-		regulator-name = "vcc_3v3";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		regulator-always-on;
-		regulator-boot-on;
-	};
-
 	vcc_1v8: vcc-1v8 {
 		compatible = "regulator-fixed";
 		regulator-name = "vcc_1v8";
 		regulator-min-microvolt = <1800000>;
 		regulator-max-microvolt = <1800000>;
 		vin-supply = <&vcc_3v3>;
+		regulator-always-on;
+		regulator-boot-on;
+	};
+
+	vcc_3v3: vcc-3v3 {
+		compatible = "regulator-fixed";
+		regulator-name = "vcc_3v3";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
 		regulator-always-on;
 		regulator-boot-on;
 	};
@@ -244,6 +244,12 @@
 };
 
 &main_pmx0 {
+	emmc_pwrseq_pins: pinmux_emmc_pwrseq_pins {
+		pinctrl-single,pins = <
+			AM62X_IOPAD(0x00c8, PIN_OUTPUT, 7) /* (Y25) VOUT0_DATA4.GPIO0_49 */
+		>;
+	};
+
 	main_i2c2_pins_default: main-i2c2-pins-default {
 		pinctrl-single,pins = <
 			AM62X_IOPAD(0x0b0, PIN_INPUT_PULLUP, 1) /* (K22) GPMC0_CSn2.I2C2_SCL */
@@ -275,15 +281,6 @@
 		>;
 	};
 
-	vdd_mmc2_pins_default: vdd-mmc2-pins-default {
-		pinctrl-single,pins = <
-			AM62X_IOPAD(0x00d8, PIN_OUTPUT, 7) /* (V21) VOUT0_DATA8.GPIO0_53 */
-			AM62X_IOPAD(0x00dc, PIN_OUTPUT, 7) /* (W21) VOUT0_DATA9.GPIO0_54 */
-			AM62X_IOPAD(0x00f0, PIN_OUTPUT, 7) /* (Y22) VOUT0_DATA14.GPIO0_59 */
-			AM62X_IOPAD(0x00f4, PIN_OUTPUT, 7) /* (AA21) VOUT0_DATA15.GPIO0_60 */
-		>;
-	};
-
 	main_mmc0_pins_default: main-mmc0-pins-default {
 		pinctrl-single,pins = <
 			AM62X_IOPAD(0x220, PIN_INPUT, 0) /* (Y3) MMC0_CMD */
@@ -299,12 +296,6 @@
 		>;
 	};
 
-	emmc_pwrseq_pins: pinmux_emmc_pwrseq_pins {
-		pinctrl-single,pins = <
-			AM62X_IOPAD(0x00c8, PIN_OUTPUT, 7) /* (Y25) VOUT0_DATA4.GPIO0_49 */
-		>;
-	};
-
 	main_mmc2_pins_default: main-mmc2-pins-default {
 		pinctrl-single,pins = <
 			AM62X_IOPAD(0x120, PIN_INPUT_PULLUP, 0) /* (C24) MMC2_CMD */
@@ -317,9 +308,22 @@
 		>;
 	};
 
-	pinctrl_restouch: restouchgrp {
+	main_rgmii1_pins_default: main-rmain-rgmii1-pins-defaultgmii1-pins-default {
 		pinctrl-single,pins = <
-			AM62X_IOPAD(0x00c4, PIN_INPUT_PULLUP, 7) /* (W24) VOUT0_DATA3.GPIO0_48 */
+			AM62X_IOPAD(0x14c, PIN_INPUT, 0) /* (AB17) RGMII1_RD0 */
+			AM62X_IOPAD(0x150, PIN_INPUT, 0) /* (AC17) RGMII1_RD1 */
+			AM62X_IOPAD(0x154, PIN_INPUT, 0) /* (AB16) RGMII1_RD2 */
+			AM62X_IOPAD(0x158, PIN_INPUT, 0) /* (AA15) RGMII1_RD3 */
+			AM62X_IOPAD(0x148, PIN_INPUT, 0) /* (AD17) RGMII1_RXC */
+			AM62X_IOPAD(0x144, PIN_INPUT, 0) /* (AE17) RGMII1_RX_CTL */
+			AM62X_IOPAD(0x134, PIN_INPUT, 0) /* (AE20) RGMII1_TD0 */
+			AM62X_IOPAD(0x138, PIN_INPUT, 0) /* (AD20) RGMII1_TD1 */
+			AM62X_IOPAD(0x13c, PIN_INPUT, 0) /* (AE18) RGMII1_TD2 */
+			AM62X_IOPAD(0x140, PIN_INPUT, 0) /* (AD18) RGMII1_TD3 */
+			AM62X_IOPAD(0x130, PIN_INPUT, 0) /* (AE19) RGMII1_TXC */
+			AM62X_IOPAD(0x12c, PIN_INPUT, 0) /* (AD19) RGMII1_TX_CTL */
+			AM62X_IOPAD(0x00bc, PIN_INPUT, 7) /* (V24) VOUT0_DATA1.GPIO0_46 */
+			AM62X_IOPAD(0x00b8, PIN_INPUT, 7) /* (U22) VOUT0_DATA0.GPIO0_45 */
 		>;
 	};
 
@@ -341,22 +345,18 @@
 		>;
 	};
 
-	main_rgmii1_pins_default: main-rmain-rgmii1-pins-defaultgmii1-pins-default {
+	pinctrl_restouch: restouchgrp {
 		pinctrl-single,pins = <
-			AM62X_IOPAD(0x14c, PIN_INPUT, 0) /* (AB17) RGMII1_RD0 */
-			AM62X_IOPAD(0x150, PIN_INPUT, 0) /* (AC17) RGMII1_RD1 */
-			AM62X_IOPAD(0x154, PIN_INPUT, 0) /* (AB16) RGMII1_RD2 */
-			AM62X_IOPAD(0x158, PIN_INPUT, 0) /* (AA15) RGMII1_RD3 */
-			AM62X_IOPAD(0x148, PIN_INPUT, 0) /* (AD17) RGMII1_RXC */
-			AM62X_IOPAD(0x144, PIN_INPUT, 0) /* (AE17) RGMII1_RX_CTL */
-			AM62X_IOPAD(0x134, PIN_INPUT, 0) /* (AE20) RGMII1_TD0 */
-			AM62X_IOPAD(0x138, PIN_INPUT, 0) /* (AD20) RGMII1_TD1 */
-			AM62X_IOPAD(0x13c, PIN_INPUT, 0) /* (AE18) RGMII1_TD2 */
-			AM62X_IOPAD(0x140, PIN_INPUT, 0) /* (AD18) RGMII1_TD3 */
-			AM62X_IOPAD(0x130, PIN_INPUT, 0) /* (AE19) RGMII1_TXC */
-			AM62X_IOPAD(0x12c, PIN_INPUT, 0) /* (AD19) RGMII1_TX_CTL */
-			AM62X_IOPAD(0x00bc, PIN_INPUT, 7) /* (V24) VOUT0_DATA1.GPIO0_46 */
-			AM62X_IOPAD(0x00b8, PIN_INPUT, 7) /* (U22) VOUT0_DATA0.GPIO0_45 */
+			AM62X_IOPAD(0x00c4, PIN_INPUT_PULLUP, 7) /* (W24) VOUT0_DATA3.GPIO0_48 */
+		>;
+	};
+
+	vdd_mmc2_pins_default: vdd-mmc2-pins-default {
+		pinctrl-single,pins = <
+			AM62X_IOPAD(0x00d8, PIN_OUTPUT, 7) /* (V21) VOUT0_DATA8.GPIO0_53 */
+			AM62X_IOPAD(0x00dc, PIN_OUTPUT, 7) /* (W21) VOUT0_DATA9.GPIO0_54 */
+			AM62X_IOPAD(0x00f0, PIN_OUTPUT, 7) /* (Y22) VOUT0_DATA14.GPIO0_59 */
+			AM62X_IOPAD(0x00f4, PIN_OUTPUT, 7) /* (AA21) VOUT0_DATA15.GPIO0_60 */
 		>;
 	};
 };
