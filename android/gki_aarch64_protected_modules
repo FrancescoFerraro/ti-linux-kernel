@@ -1,11 +1,5 @@
 arch/arm64/geniezone/gzvm.ko
-drivers/bluetooth/btbcm.ko
-drivers/bluetooth/btqca.ko
 drivers/bluetooth/btsdio.ko
-drivers/bluetooth/hci_uart.ko
-drivers/net/can/dev/can-dev.ko
-drivers/net/can/slcan/slcan.ko
-drivers/net/can/vcan.ko
 drivers/net/mii.ko
 drivers/net/ppp/bsd_comp.ko
 drivers/net/ppp/ppp_deflate.ko
@@ -37,13 +31,8 @@ net/6lowpan/nhc_mobility.ko
 net/6lowpan/nhc_routing.ko
 net/6lowpan/nhc_udp.ko
 net/8021q/8021q.ko
-net/bluetooth/bluetooth.ko
 net/bluetooth/hidp/hidp.ko
 net/bluetooth/rfcomm/rfcomm.ko
-net/can/can.ko
-net/can/can-bcm.ko
-net/can/can-gw.ko
-net/can/can-raw.ko
 net/ieee802154/6lowpan/ieee802154_6lowpan.ko
 net/ieee802154/ieee802154.ko
 net/ieee802154/ieee802154_socket.ko
