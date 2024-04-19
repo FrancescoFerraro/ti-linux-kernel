@@ -436,6 +436,8 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_uart5_pins_default>;
 	uart-has-rtscts;
+	dmas = <&main_pktdma 0x4405 0>, <&main_pktdma 0xc405 0>;
+	dma-names = "rx", "tx";
 	status = "okay";
 
 	bluetooth {
