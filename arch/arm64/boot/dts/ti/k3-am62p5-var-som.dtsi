@@ -24,6 +24,14 @@
 		clock-frequency = <100000000>;
 	};
 
+	iw612_pwrseq: iw612_pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		post-power-on-delay-ms = <100>;
+		power-off-delay-us = <10000>;
+		reset-gpios = <&main_gpio0 54 GPIO_ACTIVE_LOW>;	/* WIFI_PWR_EN */
+		status = "okay";
+	};
+
 	emmc_pwrseq: pwrseq@0 {
 		compatible = "mmc-pwrseq-emmc";
 		pinctrl-names = "default";
@@ -149,14 +157,10 @@
 	};
 
 	vdd_mmc2: vdd-wifi {
-		pinctrl-names = "default";
-		pinctrl-0 = <&vdd_mmc2_pins_default>;
 		compatible = "regulator-fixed";
 		regulator-name = "wifi_power";
 		regulator-min-microvolt = <3300000>;
 		regulator-max-microvolt = <3300000>;
-		gpios = <&main_gpio0 54 GPIO_ACTIVE_HIGH>;
-		enable-active-high;
 		status="okay";
 	};
 
@@ -327,17 +331,22 @@
 		>;
 	};
 
+	pinctrl_bt: btgrp {
+		pinctrl-single,pins = <
+			AM62PX_IOPAD(0x00f4, PIN_OUTPUT, 7) /* (Y20) VOUT0_DATA15.GPIO0_60 (BT_EN) */
+		>;
+	};
+
 	pinctrl_restouch: restouchgrp {
 		pinctrl-single,pins = <
 			AM62PX_IOPAD(0x00c4, PIN_INPUT_PULLUP, 7) /* (Y23) VOUT0_DATA3.GPIO0_48 */
 		>;
 	};
 
-	vdd_mmc2_pins_default: vdd-mmc2-pins-default {
+	pinctrl_wifi: pinctrl-wifi-default {
 		pinctrl-single,pins = <
-			AM62PX_IOPAD(0x00dc, PIN_OUTPUT, 7) /* (AC22) VOUT0_DATA9.GPIO0_54 */
-			AM62PX_IOPAD(0x00f0, PIN_OUTPUT, 7) /* (AA20) VOUT0_DATA14.GPIO0_59 */
-			AM62PX_IOPAD(0x00f4, PIN_OUTPUT, 7) /* (Y20) VOUT0_DATA15.GPIO0_60 */
+			AM62PX_IOPAD(0x00dc, PIN_OUTPUT, 7) /* (AC22) VOUT0_DATA9.GPIO0_54 - WIFI_PWR - */
+			AM62PX_IOPAD(0x00f0, PIN_OUTPUT, 7) /* (AA20) VOUT0_DATA14.GPIO0_59 - WIFI_EN - */
 		>;
 	};
 };
@@ -376,9 +385,14 @@
 
 &main_uart5 {
 	pinctrl-names = "default";
-	pinctrl-0 = <&main_uart5_pins_default>;
+	pinctrl-0 = <&main_uart5_pins_default>, <&pinctrl_bt>;
 	uart-has-rtscts;
 	status = "okay";
+
+	bluetooth_iw61x: bluetooth_iw61x {
+		compatible = "nxp,88w8987-bt";
+		status = "okay";
+	};
 };
 
 &mcasp1 {
@@ -418,16 +432,19 @@
 	bootph-all;
 };
 
-/* Wi-Fi */
+/* WIFI */
 &sdhci2 {
-	vmmc-supply = <&vdd_mmc2>;
 	pinctrl-names = "default";
-	pinctrl-0 = <&main_mmc2_pins_default>;
+	pinctrl-0 = <&main_mmc2_pins_default>, <&pinctrl_wifi>;
 	bus-width = <4>;
 	disable-wp;
-	status = "okay";
-	ti,fails-without-test-cd;
 	non-removable;
+	/*keep-power-in-suspend;*/
+	mmc-pwrseq = <&iw612_pwrseq>;
+	vmmc-supply = <&vdd_mmc2>;
+	/*cap-power-off-card;*/
+	ti,fails-without-test-cd;
+	status = "okay";
 };
 
 &usbss0 {
