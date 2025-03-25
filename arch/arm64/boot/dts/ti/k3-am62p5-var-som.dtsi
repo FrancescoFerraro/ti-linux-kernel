@@ -28,7 +28,8 @@
 		compatible = "mmc-pwrseq-simple";
 		post-power-on-delay-ms = <100>;
 		power-off-delay-us = <10000>;
-		reset-gpios = <&main_gpio0 54 GPIO_ACTIVE_LOW>;	/* WIFI_PWR_EN */
+		reset-gpios = <&main_gpio0 54 GPIO_ACTIVE_LOW>,	/* WIFI_PWR_EN */
+			      <&main_gpio0 59 GPIO_ACTIVE_LOW>;	/* WIFI_EN */
 		status = "okay";
 	};
 
@@ -154,14 +155,6 @@
 		vin-supply = <&vcc_3v3>;
 		regulator-always-on;
 		regulator-boot-on;
-	};
-
-	vdd_mmc2: vdd-wifi {
-		compatible = "regulator-fixed";
-		regulator-name = "wifi_power";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		status="okay";
 	};
 
 	vdd_phy_3v3: regulator-8 {
@@ -345,7 +338,7 @@
 
 	pinctrl_wifi: pinctrl-wifi-default {
 		pinctrl-single,pins = <
-			AM62PX_IOPAD(0x00dc, PIN_OUTPUT, 7) /* (AC22) VOUT0_DATA9.GPIO0_54 - WIFI_PWR - */
+			AM62PX_IOPAD(0x00dc, PIN_OUTPUT, 7) /* (AC22) VOUT0_DATA9.GPIO0_54 - WIFI_PWR_EN - */
 			AM62PX_IOPAD(0x00f0, PIN_OUTPUT, 7) /* (AA20) VOUT0_DATA14.GPIO0_59 - WIFI_EN - */
 		>;
 	};
@@ -439,10 +432,8 @@
 	bus-width = <4>;
 	disable-wp;
 	non-removable;
-	/*keep-power-in-suspend;*/
+	keep-power-in-suspend;
 	mmc-pwrseq = <&iw612_pwrseq>;
-	vmmc-supply = <&vdd_mmc2>;
-	/*cap-power-off-card;*/
 	ti,fails-without-test-cd;
 	status = "okay";
 };
