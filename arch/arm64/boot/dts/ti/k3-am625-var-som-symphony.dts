@@ -62,9 +62,15 @@
 		backlight = <&backlight>;
 		status = "okay";
 
-		port@0 {
-			lcd_in0: endpoint {
-				remote-endpoint = <&oldi_out0>;
+		ports {
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			port@0 {
+				reg = <0>;
+				lcd_in0: endpoint {
+					remote-endpoint = <&oldi_out0>;
+				};
 			};
 		};
 	};
@@ -190,19 +196,8 @@
 	};
 };
 
-&dphy0 {
-	status = "okay";
-};
-
 &dss {
-	bootph-all;
 	status = "okay";
-	pinctrl-names = "default";
-	pinctrl-0 = <&main_oldi0_pins_default>;
-};
-
-&dss_oldi_io_ctrl {
-	bootph-all;
 };
 
 &dss_ports {
@@ -212,8 +207,12 @@
 	/* VP1: LVDS Output (OLDI TX 0) */
 	port@0 {
 		reg = <0>;
-		oldi_out0: endpoint {
-			remote-endpoint = <&lcd_in0>;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		oldi_out0: endpoint@0 {
+			reg = <0>;
+			remote-endpoint = <&oldi_0_in>;
 		};
 	};
 };
@@ -397,31 +396,6 @@
 		>;
 	};
 
-	main_oldi0_pins_default: main-oldi0-default-pins {
-		pinctrl-single,pins = <
-			AM62X_IOPAD(0x0260, PIN_INPUT, 0) /* (AA5) OLDI0_A0N */
-			AM62X_IOPAD(0x025c, PIN_OUTPUT, 0) /* (Y6) OLDI0_A0P */
-			AM62X_IOPAD(0x0268, PIN_OUTPUT, 0) /* (AD3) OLDI0_A1N */
-			AM62X_IOPAD(0x0264, PIN_OUTPUT, 0) /* (AB4) OLDI0_A1P */
-			AM62X_IOPAD(0x0270, PIN_OUTPUT, 0) /* (Y8) OLDI0_A2N */
-			AM62X_IOPAD(0x026c, PIN_OUTPUT, 0) /* (AA8) OLDI0_A2P */
-			AM62X_IOPAD(0x0278, PIN_OUTPUT, 0) /* (AB6) OLDI0_A3N */
-			AM62X_IOPAD(0x0274, PIN_OUTPUT, 0) /* (AA7) OLDI0_A3P */
-			AM62X_IOPAD(0x0280, PIN_OUTPUT, 0) /* (AC6) OLDI0_A4N */
-			AM62X_IOPAD(0x027c, PIN_OUTPUT, 0) /* (AC5) OLDI0_A4P */
-			AM62X_IOPAD(0x0288, PIN_OUTPUT, 0) /* (AE5) OLDI0_A5N */
-			AM62X_IOPAD(0x0284, PIN_OUTPUT, 0) /* (AD6) OLDI0_A5P */
-			AM62X_IOPAD(0x0290, PIN_OUTPUT, 0) /* (AE6) OLDI0_A6N */
-			AM62X_IOPAD(0x028c, PIN_OUTPUT, 0) /* (AD7) OLDI0_A6P */
-			AM62X_IOPAD(0x0298, PIN_OUTPUT, 0) /* (AD8) OLDI0_A7N */
-			AM62X_IOPAD(0x0294, PIN_OUTPUT, 0) /* (AE7) OLDI0_A7P */
-			AM62X_IOPAD(0x02a0, PIN_OUTPUT, 0) /* (AD4) OLDI0_CLK0N */
-			AM62X_IOPAD(0x029c, PIN_OUTPUT, 0) /* (AE3) OLDI0_CLK0P */
-			AM62X_IOPAD(0x02a8, PIN_OUTPUT, 0) /* (AE4) OLDI0_CLK1N */
-			AM62X_IOPAD(0x02a4, PIN_OUTPUT, 0) /* (AD5) OLDI0_CLK1P */
-		>;
-	};
-
 	main_rgmii2_pins_default: main-rgmii2-default-pins {
 		bootph-all;
 		pinctrl-single,pins = <
@@ -571,6 +545,29 @@
 &mcu_rti0 {
 	/* MCU RTI0 is used by M4F firmware */
 	status = "reserved";
+};
+
+&oldi0 {
+	status = "okay";
+};
+
+&oldi0_ports {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	port@0 {
+		reg = <0>;
+		oldi_0_in: endpoint {
+			remote-endpoint = <&oldi_out0>;
+		};
+	};
+
+	port@1 {
+		reg = <1>;
+		oldi_0_out: endpoint {
+			remote-endpoint = <&lcd_in0>;
+		};
+	};
 };
 
 &sdhci1 {
