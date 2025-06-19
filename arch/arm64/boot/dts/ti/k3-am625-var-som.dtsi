@@ -142,7 +142,7 @@
 		bootph-all;
 		compatible = "regulator-fixed";
 		regulator-name = "vdd_phy_3v3";
-		gpios = <&main_gpio0 45 GPIO_ACTIVE_HIGH>;
+		gpio = <&main_gpio0 45 GPIO_ACTIVE_HIGH>;
 		enable-active-high;
 		regulator-always-on;
 		status="okay";
