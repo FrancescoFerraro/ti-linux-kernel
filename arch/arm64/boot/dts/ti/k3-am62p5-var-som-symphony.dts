@@ -105,7 +105,7 @@
 	ov5640_buf_en: ov5640-buf-en {
 		compatible = "regulator-fixed";
 		regulator-name = "ov5640_buf_en";
-		gpios = <&main_gpio0 21 GPIO_ACTIVE_HIGH>;
+		gpio = <&main_gpio0 21 GPIO_ACTIVE_HIGH>;
 		regulator-always-on;
 		regulator-boot-on;
 		status="okay";
