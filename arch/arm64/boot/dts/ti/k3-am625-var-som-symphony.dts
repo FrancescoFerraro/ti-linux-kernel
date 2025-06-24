@@ -153,6 +153,25 @@
 	};
 };
 
+&cdns_csi2rx0 {
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		csi0_port0: port@0 {
+			reg = <0>;
+			status = "okay";
+
+			csi2rx0_in_sensor: endpoint {
+				remote-endpoint = <&csi2_cam0>;
+				bus-type = <4>; /* CSI2 DPHY. */
+				clock-lanes = <0>;
+				data-lanes = <1 2>;
+			};
+		};
+	};
+};
+
 &cpsw3g {
 	bootph-all;
 	status = "okay";
@@ -194,6 +213,10 @@
 		clock-lanes = <0>;
 		data-lanes = <1 2>;
 	};
+};
+
+&dphy0 {
+	status = "okay";
 };
 
 &dss {
@@ -579,6 +602,10 @@
 	pinctrl-0 = <&main_mmc1_pins_default>;
 	disable-wp;
 	status="okay";
+};
+
+&ti_csi2rx0 {
+	status = "okay";
 };
 
 &timesync_router {
