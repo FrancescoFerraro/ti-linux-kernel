@@ -19,10 +19,6 @@
 		mmc0 = &sdhci0;
 		mmc1 = &sdhci1;
 		mmc2 = &sdhci2;
-		serial0 = &main_uart0;
-		serial2 = &main_uart2;
-		serial5 = &main_uart5;
-		serial6 = &main_uart6;
 		spi5 = &main_spi2;
 		usb0 = &usb0;
 		usb1 = &usb1;
