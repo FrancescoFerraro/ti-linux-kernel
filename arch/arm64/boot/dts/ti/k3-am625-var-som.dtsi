@@ -519,7 +519,7 @@
 	#address-cells = <1>;
 	#size-cells = <0>;
 	assigned-clocks = <&k3_clks 157 158>; /* wkup_clkout_sel_out0 */
-	assigned-clock-parents = <&k3_clks 157 164>; /* clk_32k_rc_sel_out0 */
+	assigned-clock-parents = <&k3_clks 157 160>; /* clk_32k_rc_sel_out0 */
 	vmmc-supply = <&reg_wifi_vmmc>;
 	pinctrl-names = "default";
 	pinctrl-0 = <&main_mmc2_pins_default>, <&wkup_clkout0_pins_default>;
